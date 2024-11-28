@@ -116,3 +116,56 @@ void maxpool_1(const FixedPoint<int32_t, 16> input[IN_H][IN_W][IN_C],
         }
     }
 }
+
+template <int HEIGHT, int WIDTH, int NUM_CHANNELS, int OUT_HEIGHT, int OUT_WIDTH>
+void maxpool_3x3(float input[HEIGHT][WIDTH][NUM_CHANNELS], float output[OUT_HEIGHT][OUT_WIDTH][NUM_CHANNELS]) {
+    int c = 0;
+    int h = 0;
+    int w = 0;
+    int start_h, start_w;
+    for (c = 0; c < NUM_CHANNELS; c++) {
+        for (h = 0; h < OUT_HEIGHT; h++) {
+            for (w = 0; w < OUT_WIDTH; w++) {
+                start_h = h * 2;
+                start_w = w * 2;
+                float max_val = -FLT_MAX; // <-------- plus petit possible
+                
+                if (start_h + 3 > OUT_HEIGHT) {
+                    if (start_w + 3 > OUT_WIDTH) {
+                        // region = M[start_h:y, start_w:x, c]
+                        for (int i = start_h; i < OUT_HEIGHT; i++) {
+                            for (int j = start_w; j < OUT_WIDTH; j++) {
+                                max_val = (M[i][j][c] > max_val) ? M[i][j][c] : max_val;
+                            }
+                        }
+                    }
+                    else {
+                        // region = M[start_h:y, start_w:start_w+3, c]
+                        for (int i = start_h; i < OUT_HEIGHT; i++) {
+                            for (int j = start_w; j < start_w + 3; j++) {
+                                max_val = (M[i][j][c] > max_val) ? M[i][j][c] : max_val;
+                            }
+                        }
+                    }
+                }
+                else if (start_w + 3 > OUT_WIDTH) {
+                    // region = M[start_h:start_h+3, start_w:x, c]
+                    for (int i = start_h; i < start_h + 3; i++) {
+                        for (int j = start_w; j < OUT_WIDTH; j++) {
+                            max_val = (M[i][j][c] > max_val) ? M[i][j][c] : max_val;
+                        }
+                    }
+                }
+                else {
+                    // region = M[start_h:start_h+3, start_w:start_w+3, c]
+                    for (int i = start_h; i < start_h + 3; i++) {
+                        for (int j = start_w; j < start_w + 3; j++) {
+                            max_val = (M[i][j][c] > max_val) ? M[i][j][c] : max_val;
+                        }
+                    }
+                }
+                output[h][w][c] = max_val;
+            }
+        }
+    }
+}
