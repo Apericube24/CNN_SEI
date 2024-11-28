@@ -1,7 +1,6 @@
 set(SOURCES
-    main.c
-    functions.c
-    parse.c
+    main.cpp
+    functions.cpp
 )
 
 add_executable(main ${SOURCES})

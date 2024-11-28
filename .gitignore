@@ -1,5 +1,7 @@
 /data/*
-./c/build/*
+/c/build/*
 /cifar10_data/*
 *.txt
 .DS_Store
+.vscode/
+.vscode/*
