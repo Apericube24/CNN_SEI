@@ -180,13 +180,13 @@ def reshape_array_parameters():
 
 reshape_array_parameters()
 
-def plot_predict_image(images, labels, class_names, predict, index):
+def plot_predict_image(images, labels, class_names, predict, confiance, index):
     image = images[index]
     label = labels[index]
     class_name = class_names[label]
     predict_class = class_names[predict]
     plt.imshow(image)
-    plt.title(f"Label: {label} ({class_name})\n Predict: {predict} ({predict_class})")
+    plt.title(f"Label: {label} ({class_name})\n Predict: {predict} ({predict_class}) \n Confiance: {confiance}")
     plt.axis('off')
     plt.show()
 
@@ -215,11 +215,11 @@ def predict(begin, end):
         output = FCP(reshape, weights_fcp, biais_fcp)
         index_max = np.argmax(output)
         print(index_max)
-        # plot_predict_image(images, labels, class_names, index_max, i)
+        plot_predict_image(images, labels, class_names, index_max, output[index_max], i)
         if index_max == labels[i]:
             correct = correct + 1
         i = i + 1
     reussite = correct / (end - begin)
     print(f"pourcentage reussite: {reussite*100}%")
 
-predict(5, 55)
+predict(10, 12)
