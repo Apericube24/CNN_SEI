@@ -1,2 +1,5 @@
 /data/*
 ./c/build/*
+/cifar10_data/*
+*.txt
+.DS_Store

@@ -42,9 +42,11 @@ def MaxPool_v2(M):
                 start_i, start_j = i * 2, j * 2
                 if (start_i + 3 > y):
                     if(start_j + 3 > x):
-                        region = M[start_i:y, start_j:start_j + 3, c]
-                    else:
+                        # region = M[start_i:y, start_j:start_j + 3, c]
                         region = M[start_i:y, start_j:x, c]
+                    else:
+                        # region = M[start_i:y, start_j:x, c]
+                        region = M[start_i:y, start_j:start_j + 3, c]
                 elif (start_j + 3 > x):
                     region = M[start_i:start_i + 3, start_j:x, c]
                 else:
@@ -178,8 +180,8 @@ def plot_sample_image(images, labels, class_names, index=0):
     plt.axis('off')
     plt.show()
 
-images, labels = load_cifar10_batch('cifar-10-batches-bin/data_batch_1.bin')
-class_names = load_class_names('cifar-10-batches-bin/batches.meta.txt')
+images, labels = load_cifar10_batch('/Users/andre/Documents/CNN_SEI/cifar10_data/cifar-10-batches-bin/test_batch.bin')
+class_names = load_class_names('/Users/andre/Documents/CNN_SEI/cifar10_data/cifar-10-batches-bin/batches.meta.txt')
 
 
 def process_tensor_data(tensor_name, raw_data):
@@ -189,7 +191,7 @@ def process_tensor_data(tensor_name, raw_data):
 
 tensor_dict = {}
 
-with open('CNN_coeff_3x3.txt', 'r') as file:
+with open('/Users/andre/Documents/CNN_SEI/cifar10_data/CNN_coeff_3x3.txt', 'r') as file:
     tensor_name = None
     raw_data = ''
     
@@ -341,7 +343,7 @@ def predict(begin, end):
     print(f"pourcentage reussite de ship : {ctoto8/toto8}% avec {toto8} ech \n")
     print(f"pourcentage reussite de truck : {ctoto9/toto9}% avec {toto9} ech \n")
 start_time= time.time()
-predict(0,100)
+predict(0,24)
 end_time=time.time()
 d_time=end_time-start_time
 print(f"Temps écoulés : {d_time:.6} seconde")

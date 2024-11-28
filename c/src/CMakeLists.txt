@@ -1,5 +1,7 @@
 set(SOURCES
     main.c
+    functions.c
+    parse.c
 )
 
 add_executable(main ${SOURCES})
