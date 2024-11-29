@@ -85,13 +85,14 @@ void convolution(const float image[IMG_H][IMG_W][IMG_C],
             }
         }
     }
-    std::cout << "padded_image:\n";
-    for (int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 5; ++j) {
-            std::cout << padded_image[i][j][0] << " "; // Only one filter
-        }
-        std::cout << "\n";
-    }
+
+    // std::cout << "padded_image:\n";
+    // for (int i = 0; i < 5; ++i) {
+    //     for (int j = 0; j < 5; ++j) {
+    //         std::cout << padded_image[i][j][0] << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
 
     // init biais
     for (int f = 0; f < NUM_FILTERS; ++f) {
@@ -131,7 +132,6 @@ template <int IMG_H, int IMG_W, int IMG_C>
 void normalize_image(float image[IMG_H][IMG_W][IMG_C], float normalized[IMG_H][IMG_W][IMG_C]) {
     const int N = IMG_H * IMG_W * IMG_C;
 
-    // Step 1: Calculate mean
     float total = 0.0f;
     for (int i = 0; i < IMG_H; ++i) {
         for (int j = 0; j < IMG_W; ++j) {
@@ -142,7 +142,6 @@ void normalize_image(float image[IMG_H][IMG_W][IMG_C], float normalized[IMG_H][I
     }
     float mean_value = total / N;
 
-    // Step 2: Calculate variance
     float variance = 0.0f;
     for (int i = 0; i < IMG_H; ++i) {
         for (int j = 0; j < IMG_W; ++j) {
@@ -154,10 +153,8 @@ void normalize_image(float image[IMG_H][IMG_W][IMG_C], float normalized[IMG_H][I
     }
     float sigma = std::sqrt(variance / N);
 
-    // Print mean and sigma
     std::cout << "Mean: " << mean_value << " ------- Sigma: " << sigma << std::endl;
 
-    // Step 3: Normalize the image
     const float epsilon = 1.0f / std::sqrt(N); // Small value to avoid division by zero
     float denominator = std::max(sigma, epsilon);
 

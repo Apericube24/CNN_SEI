@@ -1,25 +1,26 @@
-#include <array>
-#include "virgule_fixe.h"
 #include "functions.hpp"
+#include <iostream>
 
-using fixed_t = FixedPoint<int32_t, 16>;
-
-constexpr size_t IN_H = 24, IN_W = 24, IN_C = 64;
-constexpr size_t OUT_H = 12, OUT_W = 12;
-
-constexpr size_t IMG_H = 24, IMG_W = 24, IMG_C = 3, K_H = 3, K_W = 3, NUM_FILTERS = 64;
+#define IN_HEIGHT 6
+#define IN_WIDTH 6
+#define NUM_CHANNELS 1
+#define OUT_HEIGHT 3
+#define OUT_WIDTH 3
 
 int main() {
 
-    std::array<std::array<std::array<fixed_t, IN_C>, IN_W>, IN_H> input = {0};
-    std::array<std::array<std::array<fixed_t, IN_C>, OUT_W>, OUT_H> output = {0};
+    float input[IN_HEIGHT][IN_WIDTH][NUM_CHANNELS] = {
+        {{1}, {2}, {3}, {4}, {5}, {6}},
+        {{7}, {8}, {9}, {10}, {11}, {12}},
+        {{13}, {14}, {15}, {16}, {17}, {18}},
+        {{19}, {20}, {21}, {22}, {23}, {24}},
+        {{25}, {26}, {27}, {28}, {29}, {30}},
+        {{31}, {32}, {33}, {34}, {35}, {36}}
+    };
+    float output[OUT_HEIGHT][OUT_WIDTH][NUM_CHANNELS] = {0};
 
-    maxpool_1<IN_H, IN_W, IN_C, OUT_H, OUT_W>(input, output);
 
-    std::array<std::array<std::array<float, IMG_C>, IMG_W>, IMG_H> image = {0}; 
-    std::array<std::array<std::array<std::array<float, NUM_FILTERS>, IMG_C>, K_W>, K_H> Ks = {0};
-    std::array<float, NUM_FILTERS> biais = {0}; 
-    std::array<std::array<std::array<float, NUM_FILTERS>, IMG_W>, IMG_H> output = {0}; 
+    maxpool_3x3<IN_HEIGHT, IN_WIDTH, NUM_CHANNELS, OUT_HEIGHT, OUT_WIDTH>(input, output);
 
-    convolution<IMG_H, IMG_W, IMG_C, K_H, K_W, NUM_FILTERS>(image, Ks, biais, output);
+    return 0;
 }
