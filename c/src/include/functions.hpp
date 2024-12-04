@@ -2,8 +2,8 @@
 #define FUNCTIONS_HPP
 
 #include <iostream>
-#include "ac_fixed.h"
-#include "ac_math/ac_relu.h"
+// #include "ac_fixed.h"
+// #include "ac_math/ac_relu.h"
 
 // defining values
 #define IMG_HEIGHT 24
@@ -58,58 +58,58 @@
 #define MAXPOOL_FILTER_WIDTH 3
 #define MAXPOOL_FILTER_DEPTH 3
 
-fixed_t ReLu(fixed_t x);
-void softmax(fixed_t x[10]);
-void reshape(fixed_t input[3][3][20], fixed_t output[180]);
-void FCP(fixed_t M[180], fixed_t weights[180][10], fixed_t bias[10], fixed_t output[10]);
+// fixed_t ReLu(fixed_t x);
+// void softmax(fixed_t x[10]);
+// void reshape(fixed_t input[3][3][20], fixed_t output[180]);
+// void FCP(fixed_t M[180], fixed_t weights[180][10], fixed_t bias[10], fixed_t output[10]);
 
-void convolution1(
-    fixed_t image[IMG_HEIGHT][IMG_WIDTH][IMG_CHANNELS],
-    fixed_t Ks[CONV1_FILTER_HEIGHT][CONV1_FILTER_WIDTH][CONV1_FILTER_CHANNELS][CONV1_FILTER_NUMBER],
-    fixed_t biais[CONV1_BIAS_NUMBER],
-    fixed_t output[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS]
-);
+// void convolution1(
+//     fixed_t image[IMG_HEIGHT][IMG_WIDTH][IMG_CHANNELS],
+//     fixed_t Ks[CONV1_FILTER_HEIGHT][CONV1_FILTER_WIDTH][CONV1_FILTER_CHANNELS][CONV1_FILTER_NUMBER],
+//     fixed_t biais[CONV1_BIAS_NUMBER],
+//     fixed_t output[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS]
+// );
 
-void convolution2(
-    fixed_t image[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS],
-    fixed_t Ks[CONV2_FILTER_HEIGHT][CONV2_FILTER_WIDTH][CONV2_FILTER_CHANNELS][CONV2_FILTER_NUMBER],
-    fixed_t biais[CONV2_BIAS_NUMBER],
-    fixed_t output[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS]
-);
+// void convolution2(
+//     fixed_t image[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS],
+//     fixed_t Ks[CONV2_FILTER_HEIGHT][CONV2_FILTER_WIDTH][CONV2_FILTER_CHANNELS][CONV2_FILTER_NUMBER],
+//     fixed_t biais[CONV2_BIAS_NUMBER],
+//     fixed_t output[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS]
+// );
 
-void convolution3(
-    fixed_t image[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS],
-    fixed_t Ks[CONV3_FILTER_HEIGHT][CONV3_FILTER_WIDTH][CONV3_FILTER_CHANNELS][CONV3_FILTER_NUMBER],
-    fixed_t biais[CONV3_BIAS_NUMBER],
-    fixed_t output[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS]
-);
+// void convolution3(
+//     fixed_t image[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS],
+//     fixed_t Ks[CONV3_FILTER_HEIGHT][CONV3_FILTER_WIDTH][CONV3_FILTER_CHANNELS][CONV3_FILTER_NUMBER],
+//     fixed_t biais[CONV3_BIAS_NUMBER],
+//     fixed_t output[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS]
+// );
 
-void maxpool1(
-    fixed_t input[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS],
-    fixed_t output[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS]
-);
+// void maxpool1(
+//     fixed_t input[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS],
+//     fixed_t output[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS]
+// );
 
-void maxpool2(
-    fixed_t input[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS],
-    fixed_t output[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS]
-);
+// void maxpool2(
+//     fixed_t input[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS],
+//     fixed_t output[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS]
+// );
 
-void maxpool3(
-    fixed_t input[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS],
-    fixed_t output[MAXPOOL3_OUT_HEIGHT][MAXPOOL3_OUT_WIDTH][MAXPOOL3_OUT_CHANNELS]
-);
+// void maxpool3(
+//     fixed_t input[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS],
+//     fixed_t output[MAXPOOL3_OUT_HEIGHT][MAXPOOL3_OUT_WIDTH][MAXPOOL3_OUT_CHANNELS]
+// );
 
 
-// float ReLu(float x);
-// void softmax(float x[10]);
-// void reshape(float input[3][3][20], float output[180]);
-// void FCP(float M[180], float weights[180][10], float bias[10], float output[10]);
+double ReLu_old(double x);
+void softmax_old(double x[10]);
+void reshape_old(double input[3][3][20], double output[180]);
+void FCP_old(double M[180], double weights[180][10], double bias[10], double output[10]);
 
 
 
 template <int HEIGHT, int WIDTH, int NUM_CHANNELS, int OUT_HEIGHT, int OUT_WIDTH>
-void maxpool_3x3(float input[HEIGHT][WIDTH][NUM_CHANNELS],
-                 float output[OUT_HEIGHT][OUT_WIDTH][NUM_CHANNELS]) {
+void maxpool_3x3(double input[HEIGHT][WIDTH][NUM_CHANNELS],
+                 double output[OUT_HEIGHT][OUT_WIDTH][NUM_CHANNELS]) {
     int c = 0;
     int h = 0;
     int w = 0;
@@ -119,7 +119,7 @@ void maxpool_3x3(float input[HEIGHT][WIDTH][NUM_CHANNELS],
             for (w = 0; w < OUT_WIDTH; w++) {
                 start_h = h * 2;
                 start_w = w * 2;
-                float max_val = -1; // <-------- plus petit possible
+                double max_val = -1; // <-------- plus petit possible
                 
                 if (start_h + 3 > HEIGHT) {
                     if (start_w + 3 > WIDTH) {
@@ -162,16 +162,16 @@ void maxpool_3x3(float input[HEIGHT][WIDTH][NUM_CHANNELS],
 }
 
 template <int IMG_H, int IMG_W, int IMG_C, int K_H, int K_W, int NUM_FILTERS>
-void convolution(const float image[IMG_H][IMG_W][IMG_C],
-                 const float Ks[K_H][K_W][IMG_C][NUM_FILTERS],
-                 const float biais[NUM_FILTERS],
-                 float output[IMG_H][IMG_W][NUM_FILTERS]) {
+void convolution_old(const double image[IMG_H][IMG_W][IMG_C],
+                 const double Ks[K_H][K_W][IMG_C][NUM_FILTERS],
+                 const double biais[NUM_FILTERS],
+                 double output[IMG_H][IMG_W][NUM_FILTERS]) {
 
     int PADDING = 1;
     int PADDED_H = IMG_H + 2 * PADDING;
     int PADDED_W = IMG_W + 2 * PADDING;
 
-    float padded_image[PADDED_H][PADDED_W][IMG_C];
+    double padded_image[PADDED_H][PADDED_W][IMG_C];
     // padding
     for (int c = 0; c < IMG_C; ++c) {
         for (int i = 0; i < IMG_H + 2 * PADDING; ++i) {
@@ -208,7 +208,7 @@ void convolution(const float image[IMG_H][IMG_W][IMG_C],
         for (int c = 0; c < IMG_C; ++c) {
             for (int i = 0; i < IMG_H; ++i) {
                 for (int j = 0; j < IMG_W; ++j) {
-                    float conv_sum = 0;
+                    double conv_sum = 0;
                     for (int ki = 0; ki < K_H; ++ki) {
                         for (int kj = 0; kj < K_W; ++kj) {
                             conv_sum = conv_sum + padded_image[i + ki][j + kj][c] * Ks[ki][kj][c][f];
@@ -222,51 +222,51 @@ void convolution(const float image[IMG_H][IMG_W][IMG_C],
         // etape relu
         for (int i = 0; i < IMG_H; ++i) {
             for (int j = 0; j < IMG_W; ++j) {
-                output[i][j][f] = ReLu(output[i][j][f]);
+                output[i][j][f] = ReLu_old(output[i][j][f]);
             }
         }
     }
 }
 
-// template <int IMG_H, int IMG_W, int IMG_C>
-// void normalize_image(float image[IMG_H][IMG_W][IMG_C],
-//                      float normalized[IMG_H][IMG_W][IMG_C]) {
-//     const int N = IMG_H * IMG_W * IMG_C;
+template <int IMG_H, int IMG_W, int IMG_C>
+void normalize_image_old(double image[IMG_H][IMG_W][IMG_C],
+                     double normalized[IMG_H][IMG_W][IMG_C]) {
+    const int N = IMG_H * IMG_W * IMG_C;
 
-//     float total = 0.0f;
-//     for (int i = 0; i < IMG_H; ++i) {
-//         for (int j = 0; j < IMG_W; ++j) {
-//             for (int k = 0; k < IMG_C; ++k) {
-//                 total += image[i][j][k];
-//             }
-//         }
-//     }
-//     float mean_value = total / N;
+    double total = 0.0f;
+    for (int i = 0; i < IMG_H; ++i) {
+        for (int j = 0; j < IMG_W; ++j) {
+            for (int k = 0; k < IMG_C; ++k) {
+                total += image[i][j][k];
+            }
+        }
+    }
+    double mean_value = total / N;
 
-//     float variance = 0.0f;
-//     for (int i = 0; i < IMG_H; ++i) {
-//         for (int j = 0; j < IMG_W; ++j) {
-//             for (int k = 0; k < IMG_C; ++k) {
-//                 float diff = image[i][j][k] - mean_value;
-//                 variance += diff * diff;
-//             }
-//         }
-//     }
-//     float sigma = std::sqrt(variance / N);
+    double variance = 0.0f;
+    for (int i = 0; i < IMG_H; ++i) {
+        for (int j = 0; j < IMG_W; ++j) {
+            for (int k = 0; k < IMG_C; ++k) {
+                double diff = image[i][j][k] - mean_value;
+                variance += diff * diff;
+            }
+        }
+    }
+    double sigma = std::sqrt(variance / N);
 
-//     std::cout << "Mean: " << mean_value << " ------- Sigma: " << sigma << std::endl;
+    std::cout << "Mean: " << mean_value << " ------- Sigma: " << sigma << std::endl;
 
-//     const float epsilon = 1.0f / std::sqrt(N); // Small value to avoid division by zero
-//     float denominator = std::max(sigma, epsilon);
+    const double epsilon = 1.0f / std::sqrt(N); // Small value to avoid division by zero
+    double denominator = std::max(sigma, epsilon);
 
-//     for (int i = 0; i < IMG_H; ++i) {
-//         for (int j = 0; j < IMG_W; ++j) {
-//             for (int k = 0; k < IMG_C; ++k) {
-//                 normalized[i][j][k] = (image[i][j][k] - mean_value) / denominator;
-//             }
-//         }
-//     }
-// }
+    for (int i = 0; i < IMG_H; ++i) {
+        for (int j = 0; j < IMG_W; ++j) {
+            for (int k = 0; k < IMG_C; ++k) {
+                normalized[i][j][k] = (image[i][j][k] - mean_value) / denominator;
+            }
+        }
+    }
+}
 
 
 #endif
