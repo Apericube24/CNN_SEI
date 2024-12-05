@@ -1,11 +1,13 @@
 #include "functions.hpp"
 #include "coefs.h"
 #include "cifar10_data.h"
+#include "cifar10_normalized_data.h"
 #include <iostream>
+#include <cmath>
 
 
 int main() {
-    double normalized[24][24][3] = {0};
+    // double normalized[24][24][3] = {0};
 
     double output_conv1[24][24][64] = {0};
     double output_max1[12][12][64] = {0};
@@ -19,9 +21,9 @@ int main() {
     double output_reshape[180] = {0};
     double output_fcp[10] = {0};
 
-    normalize_image_old<24, 24, 3>(images[0], normalized);
+    // normalize_image_old<24, 24, 3>(images[0], normalized);
 
-    convolution_old<24, 24, 3, 3, 3, 64>(normalized, conv1_weights, conv1_biases, output_conv1);
+    convolution_old<24, 24, 3, 3, 3, 64>(images_normalized[0], conv1_weights, conv1_biases, output_conv1);
     maxpool_3x3<24, 24, 64, 12, 12>(output_conv1, output_max1);
 
     convolution_old<12, 12, 64, 3, 3, 32>(output_max1, conv2_weights, conv2_biases, output_conv2);
