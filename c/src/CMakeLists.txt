@@ -5,4 +5,8 @@ set(SOURCES
 
 add_executable(main ${SOURCES})
 
-target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_include_directories(main PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ~/Downloads/ac_types-master/include
+    ~/Downloads/ac_math-master/include
+)

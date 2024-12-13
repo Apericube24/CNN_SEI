@@ -61,14 +61,14 @@
 #define MAXPOOL_FILTER_DEPTH 3
 
 
-// ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> ReLu(ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> x) {
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> result;
-//     ac_math::ac_relu_pwl(x, result); // Version optimisée de ReLU
-//     return result;
-// }
+ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> ReLu(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x) {
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> result;
+    ac_math::ac_relu_pwl(x, result); // Version optimisée de ReLU
+    return result;
+}
 
-// void softmax(ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> x[10]) {
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> sum = 0.0;
+// void softmax(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x[10]) {
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> sum = 0.0;
 //     int i = 0;
 
 //     for (i = 0; i < 10; i++) {
@@ -81,7 +81,7 @@
 //     }
 // }
 
-// void reshape(ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> input[3][3][20], ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[180]) {
+// void reshape(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[3][3][20], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[180]) {
 //     int index = 0;
 //     for (int i = 0; i < 3; i++) {
 //         for (int j = 0; j < 3; j++) {
@@ -92,9 +92,9 @@
 //     }
 // }
 
-// void FCP(ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> M[180], ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> weights[180][10], ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> bias[10], ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[10]) {
+// void FCP(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> M[180], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> weights[180][10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> bias[10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[10]) {
 //     // NON  TESTE ATTENTION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> temp_output[10] = {0};
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> temp_output[10] = {0};
 
 //     for (int i = 0; i < 10; i++) {
 //         for (int j = 0; j < 180; j++) {
@@ -111,16 +111,16 @@
 // }
 
 void convolution1(
-    ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> image[IMG_HEIGHT][IMG_WIDTH][IMG_CHANNELS],
-    ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> Ks[CONV1_FILTER_HEIGHT][CONV1_FILTER_WIDTH][CONV1_FILTER_CHANNELS][CONV1_FILTER_NUMBER],
-    ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> biais[CONV1_BIAS_NUMBER],
-    ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS]
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[IMG_HEIGHT][IMG_WIDTH][IMG_CHANNELS],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV1_FILTER_HEIGHT][CONV1_FILTER_WIDTH][CONV1_FILTER_CHANNELS][CONV1_FILTER_NUMBER],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV1_BIAS_NUMBER],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS]
 ) {
     const int PADDING = 1;
     const int PADDED_H = IMG_HEIGHT + 2 * PADDING;
     const int PADDED_W = IMG_WIDTH + 2 * PADDING;
 
-    ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> padded_image[PADDED_H][PADDED_W][IMG_CHANNELS];
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> padded_image[PADDED_H][PADDED_W][IMG_CHANNELS];
 
     // Étape 1 : Padding
     ly_pad: for (int c = 0; c < IMG_CHANNELS; ++c) {
@@ -149,7 +149,7 @@ void convolution1(
         lx_conv: for (int c = 0; c < IMG_CHANNELS; ++c) {
             lz_conv: for (int i = 0; i < IMG_HEIGHT; ++i) {
                 lw_conv: for (int j = 0; j < IMG_WIDTH; ++j) {
-                    ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> conv_sum = 0;
+                    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> conv_sum = 0;
                     ly_k: for (int ki = 0; ki < CONV1_FILTER_HEIGHT; ++ki) {
                         lx_k: for (int kj = 0; kj < CONV1_FILTER_WIDTH; ++kj) {
                             conv_sum += padded_image[i + ki][j + kj][c] * Ks[ki][kj][c][f];
@@ -172,16 +172,16 @@ void convolution1(
 }
 
 // void convolution2(
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> image[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> Ks[CONV2_FILTER_HEIGHT][CONV2_FILTER_WIDTH][CONV2_FILTER_CHANNELS][CONV2_FILTER_NUMBER],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> biais[CONV2_BIAS_NUMBER],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS]
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV2_FILTER_HEIGHT][CONV2_FILTER_WIDTH][CONV2_FILTER_CHANNELS][CONV2_FILTER_NUMBER],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV2_BIAS_NUMBER],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS]
 // ) {
 //     const int PADDING = 1;
 //     const int PADDED_H = MAXPOOL1_OUT_HEIGHT + 2 * PADDING;
 //     const int PADDED_W = MAXPOOL1_OUT_WIDTH + 2 * PADDING;
 
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> padded_image[PADDED_H][PADDED_W][IMG_CHANNELS];
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> padded_image[PADDED_H][PADDED_W][IMG_CHANNELS];
 
 //     // Étape 1 : Padding
 //     ly_pad: for (int c = 0; c < MAXPOOL1_OUT_CHANNELS; ++c) {
@@ -210,7 +210,7 @@ void convolution1(
 //         lx_conv: for (int c = 0; c < IMG_CHANNELS; ++c) {
 //             lz_conv: for (int i = 0; i < MAXPOOL1_OUT_HEIGHT; ++i) {
 //                 lw_conv: for (int j = 0; j < MAXPOOL1_OUT_WIDTH; ++j) {
-//                     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> conv_sum = 0;
+//                     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> conv_sum = 0;
 //                     ly_k: for (int ki = 0; ki < CONV2_FILTER_HEIGHT; ++ki) {
 //                         lx_k: for (int kj = 0; kj < CONV2_FILTER_WIDTH; ++kj) {
 //                             conv_sum += padded_image[i + ki][j + kj][c] * Ks[ki][kj][c][f];
@@ -233,16 +233,16 @@ void convolution1(
 // }
 
 // void convolution3(
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> image[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> Ks[CONV3_FILTER_HEIGHT][CONV3_FILTER_WIDTH][CONV3_FILTER_CHANNELS][CONV3_FILTER_NUMBER],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> biais[CONV3_BIAS_NUMBER],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS]
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV3_FILTER_HEIGHT][CONV3_FILTER_WIDTH][CONV3_FILTER_CHANNELS][CONV3_FILTER_NUMBER],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV3_BIAS_NUMBER],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS]
 // ) {
 //     const int PADDING = 1;
 //     const int PADDED_H = MAXPOOL2_OUT_HEIGHT + 2 * PADDING;
 //     const int PADDED_W = MAXPOOL2_OUT_WIDTH + 2 * PADDING;
 
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> padded_image[PADDED_H][PADDED_W][IMG_CHANNELS];
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> padded_image[PADDED_H][PADDED_W][IMG_CHANNELS];
 
 //     // Étape 1 : Padding
 //     ly_pad: for (int c = 0; c < MAXPOOL2_OUT_CHANNELS; ++c) {
@@ -271,7 +271,7 @@ void convolution1(
 //         lx_conv: for (int c = 0; c < IMG_CHANNELS; ++c) {
 //             lz_conv: for (int i = 0; i < MAXPOOL2_OUT_HEIGHT; ++i) {
 //                 lw_conv: for (int j = 0; j < MAXPOOL2_OUT_WIDTH; ++j) {
-//                     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> conv_sum = 0;
+//                     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> conv_sum = 0;
 //                     ly_k: for (int ki = 0; ki < CONV3_FILTER_HEIGHT; ++ki) {
 //                         lx_k: for (int kj = 0; kj < CONV3_FILTER_WIDTH; ++kj) {
 //                             conv_sum += padded_image[i + ki][j + kj][c] * Ks[ki][kj][c][f];
@@ -294,8 +294,8 @@ void convolution1(
 // }
 
 // void maxpool1(
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> input[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS]
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS]
 // ) {
 //     int c = 0;
 //     int h = 0;
@@ -349,8 +349,8 @@ void convolution1(
 // }
 
 // void maxpool2(
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> input[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS]
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS]
 // ) {
 //     int c = 0;
 //     int h = 0;
@@ -404,8 +404,8 @@ void convolution1(
 // }
 
 // void maxpool3(
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> input[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RBD_INF, AC_SAT> output[MAXPOOL3_OUT_HEIGHT][MAXPOOL3_OUT_WIDTH][MAXPOOL3_OUT_CHANNELS]
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS],
+//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_OUT_HEIGHT][MAXPOOL3_OUT_WIDTH][MAXPOOL3_OUT_CHANNELS]
 // ) {
 //     int c = 0;
 //     int h = 0;
