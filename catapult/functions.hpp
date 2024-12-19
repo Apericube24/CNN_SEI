@@ -58,10 +58,10 @@
 #define MAXPOOL_FILTER_WIDTH 3
 #define MAXPOOL_FILTER_DEPTH 3
 
-// ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> ReLu(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x);
-// void softmax(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x[10]);
-// void reshape(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[3][3][20], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[180]);
-// void FCP(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> M[180], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> weights[180][10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> bias[10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[10]);
+ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> ReLu(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x);
+void softmax(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x[10]);
+void reshape(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[3][3][20], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[180]);
+void FCP(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> M[180], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> weights[180][10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> bias[10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[10]);
 
 void convolution1(
     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[IMG_HEIGHT][IMG_WIDTH][IMG_CHANNELS],
@@ -70,33 +70,33 @@ void convolution1(
     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS]
 );
 
-// void convolution2(
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV2_FILTER_HEIGHT][CONV2_FILTER_WIDTH][CONV2_FILTER_CHANNELS][CONV2_FILTER_NUMBER],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV2_BIAS_NUMBER],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS]
-// );
+void convolution2(
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV2_FILTER_HEIGHT][CONV2_FILTER_WIDTH][CONV2_FILTER_CHANNELS][CONV2_FILTER_NUMBER],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV2_BIAS_NUMBER],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS]
+);
 
-// void convolution3(
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV3_FILTER_HEIGHT][CONV3_FILTER_WIDTH][CONV3_FILTER_CHANNELS][CONV3_FILTER_NUMBER],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV3_BIAS_NUMBER],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS]
-// );
+void convolution3(
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV3_FILTER_HEIGHT][CONV3_FILTER_WIDTH][CONV3_FILTER_CHANNELS][CONV3_FILTER_NUMBER],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV3_BIAS_NUMBER],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS]
+);
 
-// void maxpool1(
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS]
-// );
+void maxpool1(
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS]
+);
 
-// void maxpool2(
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS]
-// );
+void maxpool2(
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS]
+);
 
-// void maxpool3(
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS],
-//     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_OUT_HEIGHT][MAXPOOL3_OUT_WIDTH][MAXPOOL3_OUT_CHANNELS]
-// );
+void maxpool3(
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS],
+    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_OUT_HEIGHT][MAXPOOL3_OUT_WIDTH][MAXPOOL3_OUT_CHANNELS]
+);
 
 #endif
