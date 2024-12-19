@@ -5,8 +5,6 @@
 #include <iostream>
 #include <cstdint>
 #include "ac_fixed.h"
-#include "ac_math/ac_relu.h"
-#include <ac_math/ac_pow_pwl.h>
 
 // defining values
 #define IMG_HEIGHT 24
@@ -64,22 +62,13 @@
 
 ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> ReLu(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x) {
     ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> result;
-    ac_math::ac_relu(x, result); // Version optimisée de ReLU
+    if (x > 0) {
+        result = x;
+    }
+    else {
+        result = 0;
+    }
     return result;
-}
-
-void softmax(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x[10]) {
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> sum = 0.0;
-    int i = 0;
-
-    for (i = 0; i < 10; i++) {
-        // x[i] = ac_math::ac_exp_pwl(x[i], x[i]);;
-        sum += x[i];
-    }
-
-    for (int i = 0; i < 10; i++) {
-        x[i] /= sum;
-    }
 }
 
 void reshape(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[3][3][20], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[180]) {
@@ -102,12 +91,6 @@ void FCP(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> M[180], ac_fixed<32, 6, true,
             temp_output[i] += M[j] * weights[j][i];
         }
         temp_output[i] += bias[i];
-    }
-
-    softmax(temp_output);
-
-    for (int i = 0; i < 10; i++) {
-        output[i] = temp_output[i];
     }
 }
 

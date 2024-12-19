@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include "ac_fixed.h"
-#include "ac_math/ac_relu.h"
 
 // defining values
 #define IMG_HEIGHT 24
@@ -59,7 +58,6 @@
 #define MAXPOOL_FILTER_DEPTH 3
 
 ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> ReLu(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x);
-void softmax(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x[10]);
 void reshape(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[3][3][20], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[180]);
 void FCP(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> M[180], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> weights[180][10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> bias[10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[10]);
 
