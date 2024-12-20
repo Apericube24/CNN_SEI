@@ -1,4 +1,4 @@
-#include "functions.hpp"
+#include "conv1.hpp"
 #include "ac_fixed.h"
 #include "flat_image_data.h"
 #include "flat_coefs.h"
@@ -9,29 +9,18 @@
 #define CCS_RETURN(a)  return a
 #endif
 
-void calculate3DIndices(int index, int l_x, int l_y, int l_z) {
-    // Calcul des indices x, y, z à partir de l'index 1D
-    int x = index / (l_y * l_z);                    // Trouver x
-    int y = (index % (l_y * l_z)) / l_z;            // Trouver y
-    int z = index % l_z;                            // Trouver z
-
-    // Afficher les résultats
-    std::cout << " " << index;
-    std::cout << " " << x << " " << y << " " << z << " ";
-}
-
 CCS_MAIN(int argc, char **argv) {
     FixedPoint output_conv1[24*24*64] = {0};
-    FixedPoint output_max1[12*12*64] = {0.000077777};
+    FixedPoint output_max1[12*12*64] = {0};
     FixedPoint padded_image1[26*26*3] = {0};
 
     FixedPoint output_conv2[12*12*32] = {0};
     FixedPoint output_max2[6*6*32] = {0};
-    FixedPoint padded_image2[14*14*64] = {0};
+    FixedPoint padded_image2[14*14*3] = {0};
 
     FixedPoint output_conv3[6*6*20] = {0};
     FixedPoint output_max3[3*3*20] = {0};
-    FixedPoint padded_image3[8*8*32] = {0};
+    FixedPoint padded_image3[8*8*3] = {0};
 
     FixedPoint output_reshape[180] = {0};
     FixedPoint output_fcp[10] = {0};
@@ -51,8 +40,6 @@ CCS_MAIN(int argc, char **argv) {
     int i = 0;
 
     for (i = 0; i < 10; i++) {
-        // std::cout << i << std::endl;
-        // calculate3DIndices(i, 1, 1, 10);
         std::cout << output_fcp[i] << std::endl;
     }
 

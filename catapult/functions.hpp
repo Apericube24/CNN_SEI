@@ -1,100 +1,119 @@
 #ifndef FUNCTIONS_HPP
 #define FUNCTIONS_HPP
 
-#include <iostream>
 #include "ac_fixed.h"
+
+typedef ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> FixedPoint;
 
 // defining values
 #define IMG_HEIGHT 24
 #define IMG_WIDTH 24
 #define IMG_CHANNELS 3
+#define IMG_SIZE (IMG_HEIGHT * IMG_WIDTH * IMG_CHANNELS)
 
 #define CONV1_FILTER_HEIGHT 3
 #define CONV1_FILTER_WIDTH 3
 #define CONV1_FILTER_CHANNELS 3
 #define CONV1_FILTER_NUMBER 64
+#define CONV1_SIZE (CONV1_FILTER_HEIGHT * CONV1_FILTER_WIDTH * CONV1_FILTER_CHANNELS * CONV1_FILTER_NUMBER)
 #define CONV1_BIAS_NUMBER 64
 
 #define MAXPOOL1_IN_HEIGHT 24
 #define MAXPOOL1_IN_WIDTH 24
 #define MAXPOOL1_IN_CHANNELS 64
+#define MAXPOOL1_IN_SIZE (MAXPOOL1_IN_HEIGHT * MAXPOOL1_IN_WIDTH * MAXPOOL1_IN_CHANNELS)
 
 #define MAXPOOL1_OUT_HEIGHT 12
 #define MAXPOOL1_OUT_WIDTH 12
 #define MAXPOOL1_OUT_CHANNELS 64
+#define MAXPOOL1_OUT_SIZE (MAXPOOL1_OUT_HEIGHT * MAXPOOL1_OUT_WIDTH * MAXPOOL1_OUT_CHANNELS)
 
 
 #define CONV2_FILTER_HEIGHT 3
 #define CONV2_FILTER_WIDTH 3
 #define CONV2_FILTER_CHANNELS 64
 #define CONV2_FILTER_NUMBER 32
+#define CONV2_SIZE (CONV2_FILTER_HEIGHT * CONV2_FILTER_WIDTH * CONV2_FILTER_CHANNELS * CONV2_FILTER_NUMBER)
 #define CONV2_BIAS_NUMBER 32
 
 #define MAXPOOL2_IN_HEIGHT 12
 #define MAXPOOL2_IN_WIDTH 12
 #define MAXPOOL2_IN_CHANNELS 32
+#define MAXPOOL2_IN_SIZE (MAXPOOL2_IN_HEIGHT * MAXPOOL2_IN_WIDTH * MAXPOOL2_IN_CHANNELS)
 
 #define MAXPOOL2_OUT_HEIGHT 6
 #define MAXPOOL2_OUT_WIDTH 6
 #define MAXPOOL2_OUT_CHANNELS 32
+#define MAXPOOL2_OUT_SIZE (MAXPOOL2_OUT_HEIGHT * MAXPOOL2_OUT_WIDTH * MAXPOOL2_OUT_CHANNELS)
 
 
 #define CONV3_FILTER_HEIGHT 3
 #define CONV3_FILTER_WIDTH 3
 #define CONV3_FILTER_CHANNELS 32
 #define CONV3_FILTER_NUMBER 20
+#define CONV3_SIZE (CONV3_FILTER_HEIGHT * CONV3_FILTER_WIDTH * CONV3_FILTER_CHANNELS * CONV3_FILTER_NUMBER)
 #define CONV3_BIAS_NUMBER 20
 
 #define MAXPOOL3_IN_HEIGHT 6
 #define MAXPOOL3_IN_WIDTH 6
 #define MAXPOOL3_IN_CHANNELS 20
+#define MAXPOOL3_IN_SIZE (MAXPOOL3_IN_HEIGHT * MAXPOOL3_IN_WIDTH * MAXPOOL3_IN_CHANNELS)
 
 #define MAXPOOL3_OUT_HEIGHT 3
 #define MAXPOOL3_OUT_WIDTH 3
 #define MAXPOOL3_OUT_CHANNELS 20
+#define MAXPOOL3_OUT_SIZE (MAXPOOL3_OUT_HEIGHT * MAXPOOL3_OUT_WIDTH * MAXPOOL3_OUT_CHANNELS)
 
 
 #define MAXPOOL_FILTER_WIDTH 3
 #define MAXPOOL_FILTER_DEPTH 3
 
-ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> ReLu(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> x);
-void reshape(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[3][3][20], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[180]);
-void FCP(ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> M[180], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> weights[180][10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> bias[10], ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[10]);
+#define addr2D(x, y, SIZE_Y) (x)*(SIZE_Y) + (y)
+#define addr3D(x, y, z, SIZE_Y, SIZE_Z) (x)*(SIZE_Y)*(SIZE_Z) + (y)*(SIZE_Z) + (z)
+#define addr4D(x, y, z, t, SIZE_Y, SIZE_Z, SIZE_T) (x)*(SIZE_Y)*(SIZE_Z)*(SIZE_T) + (y)*(SIZE_Z)*(SIZE_T) + (z)*(SIZE_T) + (t)
+
+
+FixedPoint ReLu(FixedPoint x);
+void reshape(FixedPoint input[3*3*20], FixedPoint output[180]);
+void FCP(FixedPoint M[180], FixedPoint weights[180*10], FixedPoint bias[10], FixedPoint output[10]);
 
 void convolution1(
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[IMG_HEIGHT][IMG_WIDTH][IMG_CHANNELS],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV1_FILTER_HEIGHT][CONV1_FILTER_WIDTH][CONV1_FILTER_CHANNELS][CONV1_FILTER_NUMBER],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV1_BIAS_NUMBER],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS]
+    FixedPoint image[IMG_SIZE],
+    FixedPoint Ks[CONV1_SIZE],
+    FixedPoint biais[CONV1_BIAS_NUMBER],
+    FixedPoint output[MAXPOOL1_IN_SIZE],
+    FixedPoint padded_image[26*26*3]
 );
 
 void convolution2(
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV2_FILTER_HEIGHT][CONV2_FILTER_WIDTH][CONV2_FILTER_CHANNELS][CONV2_FILTER_NUMBER],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV2_BIAS_NUMBER],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS]
+    FixedPoint image[MAXPOOL1_OUT_SIZE],
+    FixedPoint Ks[CONV2_SIZE],
+    FixedPoint biais[CONV2_BIAS_NUMBER],
+    FixedPoint output[MAXPOOL2_IN_SIZE],
+    FixedPoint padded_image[14*14*64]
 );
 
 void convolution3(
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> image[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> Ks[CONV3_FILTER_HEIGHT][CONV3_FILTER_WIDTH][CONV3_FILTER_CHANNELS][CONV3_FILTER_NUMBER],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> biais[CONV3_BIAS_NUMBER],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS]
+    FixedPoint image[MAXPOOL2_OUT_SIZE],
+    FixedPoint Ks[CONV3_SIZE],
+    FixedPoint biais[CONV3_BIAS_NUMBER],
+    FixedPoint output[MAXPOOL3_IN_SIZE],
+    FixedPoint padded_image[8*8*32]
 );
 
 void maxpool1(
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL1_IN_HEIGHT][MAXPOOL1_IN_WIDTH][MAXPOOL1_IN_CHANNELS],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL1_OUT_HEIGHT][MAXPOOL1_OUT_WIDTH][MAXPOOL1_OUT_CHANNELS]
+    FixedPoint input[MAXPOOL1_IN_SIZE],
+    FixedPoint output[MAXPOOL1_OUT_SIZE]
 );
 
 void maxpool2(
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL2_IN_HEIGHT][MAXPOOL2_IN_WIDTH][MAXPOOL2_IN_CHANNELS],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL2_OUT_HEIGHT][MAXPOOL2_OUT_WIDTH][MAXPOOL2_OUT_CHANNELS]
+    FixedPoint input[MAXPOOL2_IN_SIZE],
+    FixedPoint output[MAXPOOL2_OUT_SIZE]
 );
 
 void maxpool3(
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> input[MAXPOOL3_IN_HEIGHT][MAXPOOL3_IN_WIDTH][MAXPOOL3_IN_CHANNELS],
-    ac_fixed<32, 6, true, AC_RND_INF, AC_SAT> output[MAXPOOL3_OUT_HEIGHT][MAXPOOL3_OUT_WIDTH][MAXPOOL3_OUT_CHANNELS]
+    FixedPoint input[MAXPOOL3_IN_SIZE],
+    FixedPoint output[MAXPOOL3_OUT_SIZE]
 );
 
 #endif
