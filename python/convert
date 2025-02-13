@@ -1,0 +1,104 @@
+import re
+
+def decompress_riscv(instr_i):
+    instr_i = int(instr_i, 16)
+    # Extraire les 16 bits les moins significatifs
+    instr_tmp = instr_i & 0xFFFF
+    # Retourner l'instruction sous format hexadécimal avec 4 chiffres
+    instr_16 = instr_tmp
+
+    opcode = instr_16 & 0x3  # Les deux premiers bits définissent le format compressé
+    funct3 = (instr_16 >> 13) & 0x7  # Les 3 bits de funct3
+
+    instr_32 = None
+
+    if opcode == 0b00:
+        if funct3 == 0b000:
+            # C.ADDI4SPN
+            imm = ((instr_16 >> 6) & 0x1) << 2 | ((instr_16 >> 5) & 0x1) << 6 | ((instr_16 >> 11) & 0x3) << 7 | ((instr_16 >> 7) & 0xF) << 4
+            rd = ((instr_16 >> 2) & 0x7) + 8
+            instr_32 = (imm << 20) | (2 << 15) | (0b000 << 12) | (rd << 7) | (0b0010011)
+        elif funct3 == 0b010:
+            # C.LW
+            imm = ((instr_16 >> 6) & 0x1) << 2 | ((instr_16 >> 10) & 0x7) << 3 | ((instr_16 >> 5) & 0x1) << 6
+            rs1 = ((instr_16 >> 7) & 0x7) + 8
+            rd = ((instr_16 >> 2) & 0x7) + 8
+            instr_32 = (imm << 20) | (rs1 << 15) | (0b010 << 12) | (rd << 7) | (0b0000011)
+        elif funct3 == 0b110:
+            # C.SW
+            imm = ((instr_16 >> 6) & 0x1) << 2 | ((instr_16 >> 10) & 0x7) << 3 | ((instr_16 >> 5) & 0x1) << 6
+            rs1 = ((instr_16 >> 7) & 0x7) + 8
+            rs2 = ((instr_16 >> 2) & 0x7) + 8
+            instr_32 = ((imm & 0x1F) << 7) | (rs2 << 20) | (rs1 << 15) | (0b010 << 12) | ((imm >> 5) << 25) | (0b0100011)
+    elif opcode == 0b01:
+        if funct3 == 0b000:
+            # C.ADDI
+            rd = (instr_16 >> 7) & 0x1F
+            imm = ((instr_16 >> 2) & 0x1F) | (((instr_16 >> 12) & 0x1) << 5)
+            imm = (imm | 0xFFFFFFE0) if (imm & 0x20) else imm
+            instr_32 = (imm << 20) | (rd << 15) | (0b000 << 12) | (rd << 7) | (0b0010011)
+        elif funct3 == 0b010:
+            # C.LI
+            rd = (instr_16 >> 7) & 0x1F
+            imm = ((instr_16 >> 2) & 0x1F) | (((instr_16 >> 12) & 0x1) << 5)
+            imm = (imm | 0xFFFFFFE0) if (imm & 0x20) else imm
+            instr_32 = (imm << 20) | (0 << 15) | (0b000 << 12) | (rd << 7) | (0b0010011)
+        elif funct3 == 0b011:
+            # C.LUI
+            rd = (instr_16 >> 7) & 0x1F
+            imm = ((instr_16 >> 2) & 0x1F) << 12
+            instr_32 = (imm & 0xFFFFF000) | (rd << 7) | (0b0110111)
+        elif funct3 == 0b100:
+            # C.SRLI et C.SRAI
+            rd = ((instr_16 >> 7) & 0x7) + 8
+            imm = ((instr_16 >> 2) & 0x1F)
+            instr_32 = (imm << 20) | (rd << 15) | (0b101 << 12) | (rd << 7) | (0b0010011)
+    elif opcode == 0b10:
+        if funct3 == 0b000:
+            # C.SLLI
+            rd = (instr_16 >> 7) & 0x1F
+            imm = ((instr_16 >> 2) & 0x1F)
+            instr_32 = (imm << 20) | (rd << 15) | (0b001 << 12) | (rd << 7) | (0b0010011)
+
+    if instr_32 is None:
+        return "Instruction non supportée"
+
+    return f"{instr_32:08X}"  # Retourne le format 32-bit en hexadécimal
+
+def parse_log(log):
+    lines = log.strip().split("\n")
+    result = []
+
+    for i in range(0, len(lines), 2):  # Lire une ligne sur deux
+
+        compressed = 0
+        if " c." in lines[i]:
+            compressed = 1
+
+        match = re.search(r'0x([0-9a-fA-F]+) \(0x([0-9a-fA-F]+)\)', lines[i])
+        if match:
+            addr = match.group(1)
+            instr = match.group(2)
+
+            instr = decompress_riscv(instr) if compressed else instr
+
+            formatted_line = (
+                f"valid=1 exception=0 interrupt=0 cause=00 tval=00000000 priv=7 "
+                f"compressed={compressed} addr={addr} instr={instr}"
+            )
+            result.append(formatted_line)
+
+    return "\n".join(result)
+
+# Lire le fichier exemple.log
+with open("exemple.txt", 'r') as file:
+    log_data = file.read()
+
+# Traiter le contenu du fichier
+converted_log = parse_log(log_data)
+
+# Écrire le résultat dans stimuli.txt
+with open('stimuli.txt', 'w') as file:
+    file.write(converted_log)
+
+print("Le fichier stimuli.txt a été créé avec succès.")
